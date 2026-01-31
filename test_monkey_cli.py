@@ -4,7 +4,6 @@ Unit tests for monkey_cli.py core functionality.
 """
 
 import sys
-import time
 
 # Test word list generation
 def test_word_list():
