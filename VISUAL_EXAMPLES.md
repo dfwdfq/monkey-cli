@@ -1,5 +1,17 @@
 # Monkey-CLI Visual Examples
 
+## Screenshot
+
+Here's what the Monkey-CLI application looks like in action:
+
+![Monkey-CLI Screenshot](https://github.com/user-attachments/assets/03e6c569-1ce6-45f7-a322-3c60fa7047f2)
+
+The screenshot shows two states:
+1. **Active Typing Test** - The top panel shows an in-progress typing test with color-coded text (green for correct, red for incorrect), real-time stats (WPM, accuracy, timer), and the current typing position.
+2. **Test Complete** - The bottom panel displays the results screen with final statistics including WPM, accuracy, and character counts.
+
+---
+
 ## 1. Starting Screen
 ```
 ================================================================================
