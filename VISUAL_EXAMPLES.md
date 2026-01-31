@@ -2,13 +2,14 @@
 
 ## Screenshot
 
-Here's what the Monkey-CLI application looks like in action:
+Here's what the Monkey-CLI application looks like with the new features:
 
-![Monkey-CLI Screenshot](https://github.com/user-attachments/assets/03e6c569-1ce6-45f7-a322-3c60fa7047f2)
+![Monkey-CLI Screenshot](https://github.com/user-attachments/assets/ca88566b-d6d4-4655-ae30-2c7f5fed1855)
 
-The screenshot shows two states:
-1. **Active Typing Test** - The top panel shows an in-progress typing test with color-coded text (green for correct, red for incorrect), real-time stats (WPM, accuracy, timer), and the current typing position.
-2. **Test Complete** - The bottom panel displays the results screen with final statistics including WPM, accuracy, and character counts.
+The screenshot shows three states:
+1. **Active Typing Test** - Updated with muted colors (gray instead of bright cyan/yellow) for comfortable extended use, showing real-time stats and color-coded text
+2. **Test Complete** - Results screen with option to view history (Press H)
+3. **History View** - NEW! Shows overall statistics and a visual WPM trend graph using ASCII bar charts
 
 ---
 

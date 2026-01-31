@@ -8,6 +8,8 @@ import curses
 import time
 import random
 from typing import List, Tuple
+from datetime import datetime
+from data_storage import DataStorage
 
 # Common English words for typing tests
 WORD_LIST = [
@@ -50,6 +52,9 @@ class TypingTest:
         self.duration = duration
         self.word_count = word_count
         
+        # Data storage
+        self.storage = DataStorage()
+        
         # Generate random words
         self.words = self._generate_words()
         self.target_text = " ".join(self.words)
@@ -77,9 +82,9 @@ class TypingTest:
         curses.curs_set(1)  # Show cursor
         curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Correct
         curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)    # Incorrect
-        curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)  # Pending
-        curses.init_pair(4, curses.COLOR_YELLOW, curses.COLOR_BLACK) # Stats
-        curses.init_pair(5, curses.COLOR_CYAN, curses.COLOR_BLACK)   # Title
+        curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)  # Pending/Normal text
+        curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_BLACK)  # Stats - using white instead of bright yellow
+        curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_BLACK)  # Title - using white instead of bright cyan
         self.stdscr.clear()
     
     def _generate_words(self) -> List[str]:
@@ -120,7 +125,7 @@ class TypingTest:
         height, width = self.stdscr.getmaxyx()
         
         # Title
-        title = "🐵 MONKEY-CLI - Terminal Typing Test"
+        title = "MONKEY-CLI - Terminal Typing Test"
         self.stdscr.addstr(0, max(0, (width - len(title)) // 2), title, 
                           curses.color_pair(5) | curses.A_BOLD)
         
@@ -201,8 +206,8 @@ class TypingTest:
         self.stdscr.clear()
         
         # Title
-        title = "🎉 Test Complete!"
-        self.stdscr.addstr(height // 2 - 5, max(0, (width - len(title)) // 2), 
+        title = "Test Complete!"
+        self.stdscr.addstr(height // 2 - 6, max(0, (width - len(title)) // 2), 
                           title, curses.color_pair(5) | curses.A_BOLD)
         
         # Results
@@ -218,13 +223,108 @@ class TypingTest:
         ]
         
         for i, line in enumerate(results):
-            self.stdscr.addstr(height // 2 - 3 + i, max(0, (width - len(line)) // 2), 
+            self.stdscr.addstr(height // 2 - 4 + i, max(0, (width - len(line)) // 2), 
                              line, curses.color_pair(4))
         
         # Instructions
-        instruction = "Press ESC to restart or Ctrl+C to quit"
+        instruction = "Press ESC to restart | H for history | Ctrl+C to quit"
         self.stdscr.addstr(height // 2 + 4, max(0, (width - len(instruction)) // 2), 
                           instruction, curses.color_pair(3))
+        
+        self.stdscr.refresh()
+    
+    def _save_result(self):
+        """Save the test result to storage."""
+        if self.test_completed and self.start_time:
+            wpm = self._calculate_wpm()
+            accuracy = self._calculate_accuracy()
+            self.storage.save_result(
+                wpm=wpm,
+                accuracy=accuracy,
+                correct_chars=self.correct_chars,
+                incorrect_chars=self.incorrect_chars,
+                total_chars=self.total_chars_typed,
+                duration=self.duration
+            )
+    
+    def _draw_history(self):
+        """Draw the history screen with statistics and graphs."""
+        height, width = self.stdscr.getmaxyx()
+        self.stdscr.clear()
+        
+        # Get statistics
+        stats = self.storage.get_statistics()
+        recent = self.storage.get_recent_results(10)
+        
+        row = 1
+        
+        # Title
+        title = "Typing History & Statistics"
+        self.stdscr.addstr(row, max(0, (width - len(title)) // 2), 
+                          title, curses.color_pair(5) | curses.A_BOLD)
+        row += 2
+        
+        # Overall statistics
+        if stats["total_tests"] > 0:
+            self.stdscr.addstr(row, 2, "Overall Statistics:", curses.color_pair(5))
+            row += 1
+            
+            stats_lines = [
+                f"  Total Tests: {stats['total_tests']}",
+                f"  Average WPM: {stats['average_wpm']:.2f}",
+                f"  Best WPM: {stats['best_wpm']:.2f}",
+                f"  Average Accuracy: {stats['average_accuracy']:.2f}%",
+                f"  Best Accuracy: {stats['best_accuracy']:.2f}%",
+                f"  Total Characters Typed: {stats['total_chars']}"
+            ]
+            
+            for line in stats_lines:
+                self.stdscr.addstr(row, 2, line, curses.color_pair(3))
+                row += 1
+            
+            row += 1
+            
+            # Recent results graph
+            if recent:
+                self.stdscr.addstr(row, 2, "Recent WPM Trend (Last 10 Tests):", 
+                                 curses.color_pair(5))
+                row += 1
+                
+                # Draw simple bar chart
+                max_wpm = max(r["wpm"] for r in recent)
+                max_bar_width = width - 20
+                
+                for i, result in enumerate(recent):
+                    # Date
+                    try:
+                        date = datetime.fromisoformat(result["timestamp"])
+                        date_str = date.strftime("%m/%d %H:%M")
+                    except:
+                        date_str = "Unknown"
+                    
+                    # Bar
+                    bar_length = int((result["wpm"] / max_wpm) * max_bar_width) if max_wpm > 0 else 0
+                    bar = "█" * bar_length
+                    
+                    # Display
+                    line = f"  {date_str}: {bar} {result['wpm']:.1f}"
+                    if row < height - 2:
+                        try:
+                            self.stdscr.addstr(row, 2, line[:width-3], curses.color_pair(4))
+                        except curses.error:
+                            pass
+                    row += 1
+        else:
+            self.stdscr.addstr(row, 2, "No test history yet. Complete a test to see statistics!", 
+                             curses.color_pair(3))
+        
+        # Footer
+        footer = "Press ESC to return | Ctrl+C to quit"
+        try:
+            self.stdscr.addstr(height - 1, max(0, (width - len(footer)) // 2), 
+                             footer, curses.color_pair(3))
+        except curses.error:
+            pass
         
         self.stdscr.refresh()
     
@@ -281,18 +381,22 @@ class TypingTest:
             if self.user_input == self.target_text:
                 self.test_completed = True
                 self.end_time = time.time()
+                self._save_result()
         
         return True
     
     def run(self):
         """Run the typing test main loop."""
         self.stdscr.timeout(100)  # 100ms timeout for non-blocking input
+        viewing_history = False
         
         while True:
             # Clear and redraw
             self.stdscr.clear()
             
-            if self.test_completed:
+            if viewing_history:
+                self._draw_history()
+            elif self.test_completed:
                 self._draw_results()
             else:
                 self._draw_header()
@@ -305,14 +409,27 @@ class TypingTest:
                 if self._get_time_remaining() <= 0:
                     self.test_completed = True
                     self.end_time = time.time()
+                    self._save_result()
             
             # Get input
             try:
                 char = self.stdscr.getch()
                 if char != -1:  # -1 means no input (timeout)
-                    if not self._handle_input(char):
-                        # Restart requested
-                        return True
+                    # History view toggle (H key)
+                    if char in [ord('h'), ord('H')]:
+                        if self.test_completed:
+                            viewing_history = not viewing_history
+                    # ESC key
+                    elif char == 27:
+                        if viewing_history:
+                            viewing_history = False
+                        else:
+                            # Restart requested
+                            return True
+                    elif not viewing_history:
+                        if not self._handle_input(char):
+                            # Restart requested
+                            return True
             except KeyboardInterrupt:
                 return False
         
