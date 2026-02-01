@@ -96,7 +96,8 @@ class TypingTest:
         if not self.start_time:
             return 0.0
         
-        elapsed = time.time() - self.start_time
+        end_time = self.end_time if self.end_time else time.time()
+        elapsed = end_time - self.start_time
         if elapsed == 0:
             return 0.0
         

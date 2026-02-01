@@ -4,6 +4,7 @@ Unit tests for monkey_cli.py core functionality.
 """
 
 import sys
+from unittest.mock import patch
 
 # Test word list generation
 def test_word_list():
@@ -48,6 +49,25 @@ def test_character_comparison():
     assert correct_count == 10, f"Expected 10 correct chars, got {correct_count}"
     print("✓ Character comparison test passed")
 
+def test_wpm_freezes_after_completion():
+    """Test that WPM uses end time when test is complete."""
+    from monkey_cli import TypingTest
+
+    class TestTypingTest(TypingTest):
+        def _setup_curses(self):
+            pass
+
+    test = TestTypingTest(None)
+    test.start_time = 1000.0
+    test.end_time = 1060.0
+    test.correct_chars = 50
+    test.test_completed = True
+
+    # 50 correct chars / 5 chars per word = 10 words over 1 minute.
+    with patch("time.time", return_value=2060.0):
+        assert test._calculate_wpm() == 10.0, "Expected WPM to use end_time when set"
+    print("✓ WPM freeze test passed")
+
 if __name__ == "__main__":
     print("Running Monkey-CLI tests...\n")
     
@@ -56,6 +76,7 @@ if __name__ == "__main__":
         test_wpm_calculation()
         test_accuracy_calculation()
         test_character_comparison()
+        test_wpm_freezes_after_completion()
         
         print("\n✅ All tests passed!")
         sys.exit(0)
