@@ -1,5 +1,18 @@
 # Monkey-CLI Visual Examples
 
+## Screenshot
+
+Here's what the Monkey-CLI application looks like with the new features:
+
+![Monkey-CLI Screenshot](https://github.com/user-attachments/assets/ca88566b-d6d4-4655-ae30-2c7f5fed1855)
+
+The screenshot shows three states:
+1. **Active Typing Test** - Updated with muted colors (gray instead of bright cyan/yellow) for comfortable extended use, showing real-time stats and color-coded text
+2. **Test Complete** - Results screen with option to view history (Press H)
+3. **History View** - NEW! Shows overall statistics and a visual WPM trend graph using ASCII bar charts
+
+---
+
 ## 1. Starting Screen
 ```
 ================================================================================
