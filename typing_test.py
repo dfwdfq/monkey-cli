@@ -177,12 +177,8 @@ class TypingTest:
             try:
                 self.stdscr.addstr(row, col, char, color)
             except curses.error:
-                pass  # Ignore if we can't write to screen edge
-            
+                pass  # Ignore if we can't write to screen edge            
             col += 1
-            if col >= width - 1:
-                row += 1
-                col = 0
     
     def _draw_footer(self):
         """Draw the footer with instructions."""
