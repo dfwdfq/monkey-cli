@@ -43,8 +43,8 @@ or
 ./monkey_cli.py --word-count 15
 ```
 
-###configure with 2 possible arguments
-```
+### configure with 2 possible arguments
+```bash
 ./monkey_cli.py -w 10 -d 15
 ```
 
