@@ -417,12 +417,8 @@ class TypingTest:
             try:
                 char = self.stdscr.getch()
                 if char != -1:  # -1 means no input (timeout)
-                    #this is buggy
-                    if char in [ord('h'), ord('H')]:
-                        if self.test_completed:
-                            viewing_history = not viewing_history
                     # ESC key
-                    elif char == 27:
+                    if char == 27:
                         if viewing_history:
                             viewing_history = False
                         else:
