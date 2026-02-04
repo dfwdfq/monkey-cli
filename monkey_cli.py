@@ -19,6 +19,7 @@ def main(stdscr):
 
 if __name__ == "__main__":
     try:
-        curses.wrapper(main)
+        duration,word_count,history = get_arguments() #to catch -h
+        curses.wrapper(lambda scr:main(scr))
     except KeyboardInterrupt:
         print("quit Monkey-CLI.")
