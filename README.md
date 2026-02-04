@@ -32,7 +32,7 @@ or
 ```
 
 
-###run with custom words count
+### run with custom words count
 ```bash
 ./monkey_cli -w 10
 ``
