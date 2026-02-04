@@ -40,7 +40,7 @@ WORD_LIST = [
 class TypingTest:
     """Main typing test application class."""
     
-    def __init__(self, stdscr, duration: int = 30, word_count: int = 50):
+    def __init__(self, stdscr, duration: int = 30, word_count: int = 50,show_history: bool = False):
         """
         Initialize the typing test.
         
@@ -70,6 +70,7 @@ class TypingTest:
         self.correct_chars = 0
         self.incorrect_chars = 0
         self.total_chars_typed = 0
+        self.show_history = show_history
         
         # Test state
         self.test_active = False
@@ -229,7 +230,7 @@ class TypingTest:
                              line, curses.color_pair(4))
         
         # Instructions
-        instruction = "Press ESC to restart | H for history | Ctrl+C to quit"
+        instruction = "Press ESC to restart |  Ctrl+C to quit"
         self.stdscr.addstr(height // 2 + 4, max(0, (width - len(instruction)) // 2), 
                           instruction, curses.color_pair(3))
         
@@ -321,7 +322,7 @@ class TypingTest:
                              curses.color_pair(3))
         
         # Footer
-        footer = "Press ESC to return | Ctrl+C to quit"
+        footer = "Ctrl+C to quit"
         try:
             self.stdscr.addstr(height - 1, max(0, (width - len(footer)) // 2), 
                              footer, curses.color_pair(3))
@@ -390,13 +391,12 @@ class TypingTest:
     def run(self):
         """Run the typing test main loop."""
         self.stdscr.timeout(100)  # 100ms timeout for non-blocking input
-        viewing_history = False
         
         while True:
             # Clear and redraw
             self.stdscr.clear()
             
-            if viewing_history:
+            if self.show_history:
                 self._draw_history()
             elif self.test_completed:
                 self._draw_results()
@@ -419,15 +419,11 @@ class TypingTest:
                 if char != -1:  # -1 means no input (timeout)
                     # ESC key
                     if char == 27:
-                        if viewing_history:
-                            viewing_history = False
-                        else:
-                            # Restart requested
-                            return True
-                    elif not viewing_history:
-                        if not self._handle_input(char):
-                            # Restart requested
-                            return True
+                        # Restart requested
+                        return True
+                    if not self._handle_input(char):
+                        # Restart requested
+                        return True
             except KeyboardInterrupt:
                 return False
         
@@ -436,9 +432,9 @@ class TypingTest:
 
 def main(stdscr):
     """Main entry point for the application."""
-    duration,word_count = get_arguments()
+    duration,word_count,history = get_arguments()
     while True:
-        test = TypingTest(stdscr, duration=duration, word_count=word_count)
+        test = TypingTest(stdscr, duration=duration, word_count=word_count,show_history=history)
         restart = test.run()
         if not restart:
             break
