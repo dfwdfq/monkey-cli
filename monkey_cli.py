@@ -417,7 +417,7 @@ class TypingTest:
             try:
                 char = self.stdscr.getch()
                 if char != -1:  # -1 means no input (timeout)
-                    # History view toggle (H key)
+                    #this is buggy
                     if char in [ord('h'), ord('H')]:
                         if self.test_completed:
                             viewing_history = not viewing_history
@@ -452,4 +452,4 @@ if __name__ == "__main__":
     try:
         curses.wrapper(main)
     except KeyboardInterrupt:
-        print("\nThanks for using Monkey-CLI! 🐵")
+        print("quit Monkey-CLI.")
