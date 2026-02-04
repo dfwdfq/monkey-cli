@@ -1,4 +1,0 @@
-# No external dependencies required for basic functionality
-# The curses module is part of Python's standard library on Unix/Linux/macOS
-# For Windows users, install windows-curses:
-# windows-curses>=2.3.0
