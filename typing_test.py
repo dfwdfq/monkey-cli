@@ -175,7 +175,7 @@ class TypingTest:
                 color = curses.color_pair(3)
             
             try:
-                self.stdscr.addstr(row, col+5, char, color)
+                self.stdscr.addstr(row, col, char, color)
             except curses.error:
                 pass  # Ignore if we can't write to screen edge
             
