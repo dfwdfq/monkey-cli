@@ -33,7 +33,7 @@ WORD_LIST = [
 class TypingTest:
     """Main typing test application class."""
     
-    def __init__(self, stdscr, duration: int = 30, word_count: int = 50,show_history: bool = False):
+    def __init__(self, stdscr, duration: int = 30, word_count: int = 50, show_history: bool = False):
         """
         Initialize the typing test.
         
@@ -142,43 +142,64 @@ class TypingTest:
         self.stdscr.addstr(2, 0, "─" * width)
     
     def _draw_text(self):
-        """Draw the target text with color-coded characters."""
+        """Draw the target text with color-coded characters in a single centered line."""
         height, width = self.stdscr.getmaxyx()
-        start_row = 4
         
-        # Calculate display window for text
-        max_display_chars = width * (height - start_row - 5)
-        display_start = max(0, self.current_position - 100)
-        display_end = min(len(self.target_text), display_start + max_display_chars)
+        center_row = height // 2
         
-        row = start_row
-        col = 0
+        max_visible_chars = width - 4
         
-        for i in range(display_start, display_end):
-            if row >= height - 3:
-                break
+        if self.current_position <= max_visible_chars // 2:
+            start_pos = 0
+        elif len(self.target_text) - self.current_position <= max_visible_chars // 2:
+            start_pos = max(0, len(self.target_text) - max_visible_chars)
+        else:
+            start_pos = self.current_position - max_visible_chars // 2
+        
+        end_pos = min(len(self.target_text), start_pos + max_visible_chars)
+        
+        text_to_display = self.target_text[start_pos:end_pos]
+        start_col = (width - len(text_to_display)) // 2
+        
+        for i in range(len(text_to_display)):
+            actual_pos = start_pos + i
+            char = text_to_display[i]
+            col = start_col + i
             
-            char = self.target_text[i]
-            
-            # Determine color based on typing status
-            if i < len(self.user_input):
-                # Already typed
-                if self.user_input[i] == char:
-                    color = curses.color_pair(1)  # Green for correct
+            if actual_pos < len(self.user_input):
+                if self.user_input[actual_pos] == char:
+                    color = curses.color_pair(1)
                 else:
-                    color = curses.color_pair(2)  # Red for incorrect
-            elif i == len(self.user_input):
-                # Current position (cursor)
+                    color = curses.color_pair(2)
+            elif actual_pos == len(self.user_input):
                 color = curses.color_pair(3) | curses.A_UNDERLINE
             else:
-                # Not yet typed
                 color = curses.color_pair(3)
             
             try:
-                self.stdscr.addstr(row, col, char, color)
+                self.stdscr.addstr(center_row, col, char, color)
             except curses.error:
-                pass  # Ignore if we can't write to screen edge            
-            col += 1
+                pass
+        
+        if len(self.user_input) >= len(self.target_text):
+            try:
+                self.stdscr.addstr(center_row, start_col + len(text_to_display), 
+                                 "|", curses.color_pair(3) | curses.A_BOLD)
+            except curses.error:
+                pass
+        
+        progress_width = 40
+        progress_bar = "[" + "=" * int((self.current_position / len(self.target_text)) * progress_width) + \
+                       ">" + " " * (progress_width - int((self.current_position / len(self.target_text)) * progress_width)) + "]"
+        progress_text = f"Position: {self.current_position}/{len(self.target_text)}"
+        
+        try:
+            self.stdscr.addstr(center_row + 1, (width - len(progress_bar)) // 2, 
+                             progress_bar, curses.color_pair(3))
+            self.stdscr.addstr(center_row + 2, (width - len(progress_text)) // 2,
+                             progress_text, curses.color_pair(4))
+        except curses.error:
+            pass
     
     def _draw_footer(self):
         """Draw the footer with instructions."""
@@ -417,4 +438,3 @@ class TypingTest:
                 return False
         
         return False
-
