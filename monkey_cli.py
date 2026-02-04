@@ -10,6 +10,7 @@ import random
 from typing import List, Tuple
 from datetime import datetime
 from data_storage import DataStorage
+from arguments import get_arguments
 
 # Common English words for typing tests
 WORD_LIST = [
@@ -439,8 +440,9 @@ class TypingTest:
 
 def main(stdscr):
     """Main entry point for the application."""
+    duration,word_count = get_arguments()
     while True:
-        test = TypingTest(stdscr, duration=30, word_count=50)
+        test = TypingTest(stdscr, duration=duration, word_count=word_count)
         restart = test.run()
         if not restart:
             break
