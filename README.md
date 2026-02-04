@@ -53,21 +53,6 @@ or
 ```bash
 ./monkey_cli.py -H
 ```
-
-## Requirements
-
-- Python 3.6+
-- Terminal with color support
-- Linux(don't care of non-Linux)
-
 ## Screenshots(Not mine)
 
 ![Monkey-CLI Screenshot](https://github.com/user-attachments/assets/ca88566b-d6d4-4655-ae30-2c7f5fed1855)
-
-The application features:
-- Muted, comfortable color scheme for extended use
-- Real-time WPM and accuracy display
-- Color-coded text (green for correct, red for incorrect)
-- Clean, distraction-free interface
-- Comprehensive results screen
-- Historical tracking with visual graphs
