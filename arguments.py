@@ -3,7 +3,7 @@ import sys
 
 parser = argparse.ArgumentParser(
                     prog='monkey-cli',
-                    description='A minimalistic typing test application for your terminal - inspired by Monkeytype.')
+                    description='De-vibecoded terminal clone of slop that was inspired by MonkeyType.')
 
 
 parser.add_argument("-d","--duration",help="test time in seconds.",type=int,default=30)
