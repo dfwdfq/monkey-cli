@@ -13,6 +13,12 @@ parser.add_argument("-H","--history",help="display history.",action="store_true"
 def get_arguments():
     try:
         args = parser.parse_args()
-        return args.duration, args.word_count,args.history
+        wc = args.word_count
+        d = args.duration
+        if wc == 0 or d == 0:
+            print("oh, dude! come on! No ZeroShitException in this app!")
+            sys.exit(-1)
+            
+        return d, wc,args.history
     except SystemExit:
         sys.exit(0)
