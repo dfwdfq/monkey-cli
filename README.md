@@ -53,3 +53,6 @@ or
 ```bash
 ./monkey_cli.py -H
 ```
+
+# Screenshot
+![Screenshot](monkey_cli_screenshot.png)
