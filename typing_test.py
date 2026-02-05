@@ -4,13 +4,18 @@ import random
 from typing import List, Tuple
 from datetime import datetime
 from data_storage import DataStorage
-from word_list import WORD_LIST
+from word_list import load_word_list
 
 
 class TypingTest:
     """Main typing test application class."""
     
-    def __init__(self, stdscr, duration: int = 30, word_count: int = 50, show_history: bool = False):
+    def __init__(self,
+                 stdscr,
+                 duration: int      = 30,
+                 word_count: int    = 50,
+                 show_history: bool = False,
+                 dict_name:str      = "default"):
         """
         Initialize the typing test.
         
@@ -22,6 +27,7 @@ class TypingTest:
         self.stdscr = stdscr
         self.duration = duration
         self.word_count = word_count
+        self.dict_name = dict_name
         
         # Data storage
         self.storage = DataStorage()
@@ -67,7 +73,9 @@ class TypingTest:
     
     def _generate_words(self) -> List[str]:
         """Generate random words for the test."""
-        return [random.choice(WORD_LIST) for _ in range(self.word_count)]
+        w_list = load_word_list(self.dict_name)
+        random.shuffle(w_list)
+        return [random.choice(w_list) for _ in range(self.word_count)]
     
     def _calculate_wpm(self) -> float:
         """Calculate words per minute."""

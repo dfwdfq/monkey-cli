@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument("-d","--duration",help="test time in seconds.",type=int,default=30)
 parser.add_argument("-w","--word-count",help="amount of words.",type=int,default=50)
 parser.add_argument("-H","--history",help="display history.",action="store_true")
+parser.add_argument("-l","--list",help="dictionary list to use",type=str,default="default")
 
 def get_arguments():
     try:
@@ -19,6 +20,6 @@ def get_arguments():
             print("oh, dude! come on! No ZeroShitException in this app!")
             sys.exit(-1)
             
-        return d, wc,args.history
+        return d, wc,args.history, args.list
     except SystemExit:
         sys.exit(0)

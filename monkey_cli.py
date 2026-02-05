@@ -9,9 +9,13 @@ import curses
 
 def main(stdscr):
     """Main entry point for the application."""
-    duration,word_count,history = get_arguments()
+    duration,word_count,history,dictionary = get_arguments()
     while True:
-        test = TypingTest(stdscr, duration=duration, word_count=word_count,show_history=history)
+        test = TypingTest(stdscr,
+                          duration=duration,
+                          word_count=word_count,
+                          show_history=history,
+                          dict_name=dictionary)
         restart = test.run()
         if not restart:
             break
@@ -19,7 +23,7 @@ def main(stdscr):
 
 if __name__ == "__main__":
     try:
-        duration,word_count,history = get_arguments() #to catch -h
+        duration,word_count,history,dictionary = get_arguments() #to catch -h
         curses.wrapper(lambda scr:main(scr))
     except KeyboardInterrupt:
         print("quit Monkey-CLI.")
