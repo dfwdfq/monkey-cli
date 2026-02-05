@@ -20,39 +20,19 @@ No external dependencies needed! The application uses Python's built-in `curses`
 chmod +x monkey_cli.py
 ./monkey_cli.py
 ```
-### run with custom duration(in seconds)
+
+## output of ./monkey_cli.py -h
 ```bash
-./monkey_cli.py -d 15
+options:
+  -h, --help            show this help message and exit
+  -d, --duration DURATION
+                        test time in seconds.
+  -w, --word-count WORD_COUNT
+                        amount of words.
+  -H, --history         display history.
+  -l, --list LIST       dictionary list to use
 ```
 
-or
-
-```bash
-./monkey_cli.py --duration 15
-```
-
-
-### run with custom words count
-```bash
-./monkey_cli -w 10
-``
-
-or
-
-```bash
-./monkey_cli.py --word-count 15
-```
-
-### configure with 2 possible arguments
-```bash
-./monkey_cli.py -w 10 -d 15
-```
-
-
-### see history
-```bash
-./monkey_cli.py -H
-```
 
 # Screenshot
 ![Screenshot](monkey_cli_screenshot.png)
