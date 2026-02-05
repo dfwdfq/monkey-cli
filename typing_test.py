@@ -41,6 +41,12 @@ class TypingTest:
         self.incorrect_chars = 0
         self.total_chars_typed = 0
         self.show_history = show_history
+
+        
+        self.results_drawn = False #use this flag to prevent from re-calculating accuracy
+        self.wpm = None
+        self.accuracy = None
+        
         
         # Test state
         self.test_active = False
@@ -200,13 +206,15 @@ class TypingTest:
         self.stdscr.addstr(height // 2 - 6, max(0, (width - len(title)) // 2), 
                           title, curses.color_pair(5) | curses.A_BOLD)
         
-        # Results
-        wpm = self._calculate_wpm()
-        accuracy = self._calculate_accuracy()
+        #Results
+        if not self.results_drawn:
+            self.wpm = self._calculate_wpm()
+            self.accuracy = self._calculate_accuracy()
+            self.results_drawn = True
         
         results = [
-            f"WPM: {wpm:.2f}",
-            f"Accuracy: {accuracy:.2f}%",
+            f"WPM: {self.wpm:.2f}",
+            f"Accuracy: {self.accuracy:.2f}%",
             f"Correct Characters: {self.correct_chars}",
             f"Incorrect Characters: {self.incorrect_chars}",
             f"Total Characters: {self.total_chars_typed}"
@@ -378,7 +386,7 @@ class TypingTest:
     def run(self):
         """Run the typing test main loop."""
         self.stdscr.timeout(100)  # 100ms timeout for non-blocking input
-        
+        self.results_drawn = False
         while True:
             # Clear and redraw
             self.stdscr.clear()
