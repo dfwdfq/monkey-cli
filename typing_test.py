@@ -416,9 +416,18 @@ class TypingTest:
                     if char == 27:
                         # Restart requested
                         return True
-                    if not self._handle_input(char):
-                        # Restart requested
-                        return True
+                    #THIS IS LITERALLY NOT OK
+                    #but...
+                    #This dirty af hack fixes vibe-coded bug
+                    #that was inserted on line after my hack
+                    #by some random indian guy, who wrote
+                    #this project with his only companion - Copilot.
+                    #It works and it's good enough, so let it be.
+                    #Let this code will be forever and ever crap.                
+                    if not self.results_drawn:
+                        if not self._handle_input(char):
+                            # Restart requested
+                            return True
             except KeyboardInterrupt:
                 return False
         
