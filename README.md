@@ -53,6 +53,3 @@ or
 ```bash
 ./monkey_cli.py -H
 ```
-## Screenshots(Not mine)
-
-![Monkey-CLI Screenshot](https://github.com/user-attachments/assets/ca88566b-d6d4-4655-ae30-2c7f5fed1855)
