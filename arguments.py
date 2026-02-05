@@ -15,7 +15,7 @@ def get_arguments():
         args = parser.parse_args()
         wc = args.word_count
         d = args.duration
-        if wc == 0 or d == 0:
+        if wc <= 0 or d <= 0:
             print("oh, dude! come on! No ZeroShitException in this app!")
             sys.exit(-1)
             
