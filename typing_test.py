@@ -408,6 +408,12 @@ class TypingTest:
                 self._draw_text()
                 self._draw_footer()
                 self.stdscr.refresh()
+
+            #if all characters are typed, then stop test
+            if len(self.target_text)-1 == self.current_position:
+                self.test_completed = True
+                self.end_time = time.time()
+                self._save_result()
             
             # Check time limit
             if self.test_active and not self.test_completed:
@@ -416,6 +422,7 @@ class TypingTest:
                     self.end_time = time.time()
                     self._save_result()
             
+                    
             # Get input
             try:
                 char = self.stdscr.getch()
